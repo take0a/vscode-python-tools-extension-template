@@ -1,158 +1,154 @@
-# Template for VS Code python tools extensions
+# VS Code Pythonツール拡張機能用テンプレート
 
-This is a template repository to get you started on building a VS Code extension for your favorite python tool. It could be a linter, formatter, or code analysis, or all of those together. This template will give you the basic building blocks you need to build a VS Code extension for it.
+これは、お気に入りのPythonツール向けのVS Code拡張機能の構築を開始するためのテンプレートリポジトリです。リンター、フォーマッタ、コード解析ツールなど、あるいはそれらすべてを組み合わせたものでも構いません。このテンプレートは、これらのツール向けのVS Code拡張機能を構築するために必要な基本的な構成要素を提供します。
 
-## Programming Languages and Frameworks
+## プログラミング言語とフレームワーク
 
-The extension template has two parts, the extension part and language server part. The extension part is written in TypeScript, and language server part is written in Python over the [_pygls_][pygls] (Python language server) library.
+拡張機能テンプレートは、拡張機能部分と言語サーバー部分の2つの部分で構成されています。拡張機能部分はTypeScriptで記述され、言語サーバー部分は[_pygls_][pygls]（Python言語サーバー）ライブラリを介してPythonで記述されています。
 
-For the most part you will be working on the python part of the code when using this template. You will be integrating your tool with the extension part using the [Language Server Protocol](https://microsoft.github.io/language-server-protocol). [_pygls_][pygls] currently works on the [version 3.16 of LSP](https://microsoft.github.io/language-server-protocol/specifications/specification-3-16/).
+このテンプレートを使用する場合、ほとんどの部分はPython部分のコードで作業することになります。ツールと拡張機能部分を統合するには、[言語サーバープロトコル](https://microsoft.github.io/language-server-protocol)を使用します。[_pygls_][pygls]は現在、[LSPバージョン3.16](https://microsoft.github.io/language-server-protocol/specifications/specification-3-16/)で動作します。
 
-The TypeScript part handles working with VS Code and its UI. The extension template comes with few settings pre configured that can be used by your tool. If you need to add new settings to support your tool, you will have to work with a bit of TypeScript. The extension has examples for few settings that you can follow. You can also look at extensions developed by our team for some of the popular tools as reference.
+TypeScript部分は、VS CodeとそのUIの操作を処理します。拡張機能テンプレートには、ツールで使用できるいくつかの設定が事前に構成されています。ツールをサポートするために新しい設定を追加する必要がある場合は、TypeScriptを少し使用する必要があります。拡張機能には、いくつかの設定例が用意されているので、参考にしてください。また、当チームが開発した人気ツール向けの拡張機能も参考としてご覧ください。
 
-## Requirements
+## 要件
 
-1. VS Code 1.64.0 or greater
-1. Python 3.9 or greater
+1. VS Code 1.64.0 以上
+1. Python 3.9 以上
 1. node >= 18.17.0
-1. npm >= 8.19.0 (`npm` is installed with node, check npm version, use `npm install -g npm@8.3.0` to update)
-1. Python extension for VS Code
+1. npm >= 8.19.0 (`npm` は node と一緒にインストールされます。npm のバージョンを確認し、`npm install -g npm@8.3.0` でアップデートしてください)
+1. VS Code 用 Python 拡張機能
 
-You should know to create and work with python virtual environments.
+Python 仮想環境の作成と操作方法を理解している必要があります。
 
-## Getting Started
+## はじめに
 
-1. Use this [template to create your repo](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
-1. Check-out your repo locally on your development machine.
-1. Create and activate a python virtual environment for this project in a terminal. Be sure to use the minimum version of python for your tool. This template was written to work with python 3.9 or greater.
-1. Install `nox` in the activated environment: `python -m pip install nox`.
-1. Add your favorite tool to `requirements.in`
-1. Run `nox --session setup`.
-1. **Optional** Install test dependencies `python -m pip install -r src/test/python_tests/requirements.txt`. You will have to install these to run tests from the Test Explorer.
-1. Open `package.json`, look for and update the following things:
-    1. Find and replace `<pytool-module>` with module name for your tool. This will be used internally to create settings namespace, register commands, etc. Recommendation is to use lower case version of the name, no spaces, `-` are ok. For example, replacing `<pytool-module>` with `pylint` will lead to settings looking like `pylint.args`. Another example, replacing `<pytool-module>` with `black-formatter` will make settings look like `black-formatter.args`.
-    1. Find and replace `<pytool-display-name>` with display name for your tool. This is used as the title for the extension in market place, extensions view, output logs, etc. For example, for the `black` extension this is `Black Formatter`.
-1. Install node packages using `npm install`.
-1. Go to https://marketplace.visualstudio.com/vscode and create a publisher account if you don't already have one.
-    1. Use the published name in `package.json` by replacing `<my-publisher>` with the name you registered in the marketplace.
+1. この[テンプレートを使用してリポジトリを作成](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)します。
+1. 開発マシンでリポジトリをローカルにチェックアウトします。
+1. ターミナルで、このプロジェクト用のPython仮想環境を作成し、アクティブ化します。使用するツールの最小バージョンであるPythonを使用してください。このテンプレートはPython 3.9以上で動作するように作成されています。
+1. アクティブ化した環境に`nox`をインストールします: `python -m pip install nox`
+1. `requirements.in`にお好みのツールを追加します。
+1. `nox --session setup`を実行します。
+1. **オプション** テスト依存関係をインストールします: `python -m pip install -r src/test/python_tests/requirements.txt`テストエクスプローラーからテストを実行するには、これらをインストールする必要があります。
+1. `package.json` を開き、以下の項目を探して更新します。
+    1. `<pytool-module>` をツールのモジュール名に置き換えます。これは、設定の名前空間の作成やコマンドの登録などに内部的に使用されます。名前は小文字で表記し、スペースや `-` は使用しないでください。例えば、`<pytool-module>` を `pylint` に置き換えると、設定は `pylint.args` のようになります。また、`<pytool-module>` を `black-formatter` に置き換えると、設定は `black-formatter.args` のようになります。
+    1. `<pytool-display-name>` をツールの表示名に置き換えます。これは、マーケットプレイス、拡張機能ビュー、出力ログなどで拡張機能のタイトルとして使用されます。例えば、`black` 拡張機能の場合は `Black Formatter` です。
+1. `npm install` を使用して Node.js パッケージをインストールします。
+1. https://marketplace.visualstudio.com/vscode にアクセスし、パブリッシャー アカウントをまだお持ちでない場合は作成します。
+    1. `package.json` 内の `<my-publisher>` をマーケットプレイスに登録した名前に置き換えて、公開された名前を使用します。
 
-## Features of this Template
+## このテンプレートの機能
 
-After finishing the getting started part, this template would have added the following. Assume `<pytool-module>` was replaced with `mytool`, and `<pytool-display-name>` with`My Tool`:
+導入部分が完了すると、このテンプレートには以下の内容が追加されます。`<pytool-module>` が `mytool` に、`<pytool-display-name>` が `My Tool` に置き換えられていると仮定します。
 
-1. A command `My Tool: Restart Server` (command Id: `mytool.restart`).
-1. Following setting:
+1. コマンド `My Tool: Restart Server` (コマンド ID: `mytool.restart`)。
+1. 以下の設定:
     - `mytool.args`
     - `mytool.path`
     - `mytool.importStrategy`
     - `mytool.interpreter`
     - `mytool.showNotification`
-1. Following triggers for extension activation:
-    - On Language `python`.
-    - On File with `.py` extension found in the opened workspace.
-1. Following commands are registered:
-    - `mytool.restart`: Restarts the language server.
-1. Output Channel for logging `Output` > `My Tool`
+1. 拡張機能の有効化トリガー:
+    - 言語が `python` の場合。
+    - 開いているワークスペースで拡張子 `.py` のファイルが見つかった場合。
+1. 以下のコマンドが登録されています:
+    - `mytool.restart`: 言語サーバーを再起動します。
+1. ログ出力用の出力チャンネル `Output` > `My Tool`
 
-## Adding features from your tool
+## ツールから機能を追加する
 
-Open `bundled/tool/lsp_server.py`, here is where you will do most of the changes. Look for `TODO` comments there for more details.
+`bundled/tool/lsp_server.py` を開いてください。ここでほとんどの変更を行います。詳細は、`TODO` コメントを参照してください。
 
-Also look for `TODO` in other locations in the entire template:
+テンプレート全体の他の場所でも `TODO` を確認してください。
 
-- `bundled/tool/lsp_runner.py` : You may need to update this in some special cases.
-- `src/test/python_tests/test_server.py` : This is where you will write tests. There are two incomplete examples provided there to get you started.
-- All the markdown files in this template have some `TODO` items, be sure to check them out as well. That includes updating the LICENSE file, even if you want to keep it MIT License.
+- `bundled/tool/lsp_runner.py` : 特殊なケースでは、このファイルを更新する必要がある場合があります。
+- `src/test/python_tests/test_server.py` : テストを記述する場所です。ここでは、開始するための不完全な例が2つ提供されています。
+- このテンプレートのすべての Markdown ファイルには、`TODO` 項目があります。必ず確認してください。これには、MIT ライセンスを維持する場合でも、LICENSE ファイルの更新が含まれます。
 
-References, to other extension created by our team using the template:
+このテンプレートを使用してチームが作成した他の拡張機能への参照:
 
-- Protocol reference: <https://microsoft.github.io/language-server-protocol/specifications/specification-3-16/>
-- Implementation showing how to handle Linting on file `open`, `save`, and `close`. [Pylint](https://github.com/microsoft/vscode-pylint/tree/main/bundled/tool)
-- Implementation showing how to handle Formatting. [Black Formatter](https://github.com/microsoft/vscode-black-formatter/tree/main/bundled/tool)
-- Implementation showing how to handle Code Actions. [isort](https://github.com/microsoft/vscode-isort/blob/main/bundled/tool)
+- プロトコルリファレンス: <https://microsoft.github.io/language-server-protocol/specifications/specification-3-16/>
+- ファイルの `open`、`save`、`close` 時の Lint 処理方法を示す実装。[Pylint](https://github.com/microsoft/vscode-pylint/tree/main/bundled/tool)
+- フォーマット処理方法を示す実装。[Black Formatter](https://github.com/microsoft/vscode-black-formatter/tree/main/bundled/tool)
+- コードアクションの処理方法を示す実装。[isort](https://github.com/microsoft/vscode-isort/blob/main/bundled/tool)
 
-## Building and Run the extension
+## 拡張機能のビルドと実行
 
-Run the `Debug Extension and Python` configuration form VS Code. That should build and debug the extension in host window.
+VS Code から `Debug Extension and Python` 設定を実行します。これにより、ホストウィンドウで拡張機能がビルドされ、デバッグされます。
 
-Note: if you just want to build you can run the build task in VS Code (`ctrl`+`shift`+`B`)
+注: ビルドだけを実行したい場合は、VS Code でビルドタスクを実行できます (`ctrl`+`shift`+`B`)
 
-## Debugging
+## デバッグ
 
-To debug both TypeScript and Python code use `Debug Extension and Python` debug config. This is the recommended way. Also, when stopping, be sure to stop both the Typescript, and Python debug sessions. Otherwise, it may not reconnect to the python session.
+TypeScript と Python コードの両方をデバッグするには、`Debug Extension and Python` デバッグ構成を使用します。これが推奨される方法です。また、停止する際は、TypeScript と Python の両方のデバッグセッションを停止してください。そうしないと、Python セッションに再接続されない可能性があります。
 
-To debug only TypeScript code, use `Debug Extension` debug config.
+TypeScript コードのみをデバッグするには、`Debug Extension` デバッグ構成を使用します。
 
-To debug a already running server or in production server, use `Python Attach`, and select the process that is running `lsp_server.py`.
+すでに実行中のサーバーまたは本番サーバーをデバッグするには、`Python Attach` を使用し、`lsp_server.py` を実行しているプロセスを選択します。
 
-## Logging and Logs
+## ログ出力とログ
 
-The template creates a logging Output channel that can be found under `Output` > `mytool` panel. You can control the log level running the `Developer: Set Log Level...` command from the Command Palette, and selecting your extension from the list. It should be listed using the display name for your tool. You can also set the global log level, and that will apply to all extensions and the editor.
+テンプレートは、`Output` > `mytool` パネルにログ出力チャネルを作成します。ログレベルは、コマンドパレットから `Developer: Set Log Level...` コマンドを実行し、リストから拡張機能を選択することで制御できます。拡張機能は、ツールの表示名でリストされているはずです。また、グローバルログレベルを設定することもできます。これは、すべての拡張機能とエディターに適用されます。
 
-If you need logs that involve messages between the Language Client and Language Server, you can set `"mytool.server.trace": "verbose"`, to get the messaging logs. These logs are also available `Output` > `mytool` panel.
+言語クライアントと言語サーバー間のメッセージに関するログが必要な場合は、`"mytool.server.trace": "verbose"` と設定してメッセージログを取得できます。これらのログは、`Output` > `mytool` パネルでも確認できます。
 
-## Adding new Settings or Commands
+## 新しい設定またはコマンドの追加
 
-You can add new settings by adding details for the settings in `package.json` file. To pass this configuration to your python tool server (i.e, `lsp_server.py`) update the `settings.ts` as need. There are examples of different types of settings in that file that you can base your new settings on.
+`package.json` ファイルに設定の詳細を追加することで、新しい設定を追加できます。この設定を Python ツールサーバー (`lsp_server.py`) に渡すには、必要に応じて `settings.ts` を更新してください。このファイルには、新しい設定のベースとなる様々な種類の設定例が含まれています。
 
-You can follow how `restart` command is implemented in `package.json` and `extension.ts` for how to add commands. You can also contribute commands from Python via the Language Server Protocol.
+コマンドの追加方法については、`package.json` と `extension.ts` で `restart` コマンドがどのように実装されているかを参照してください。また、Language Server Protocol を介して Python からコマンドを提供することもできます。
 
-## Testing
+## テスト
 
-See `src/test/python_tests/test_server.py` for starting point. See, other referred projects here for testing various aspects of running the tool over LSP.
+出発点として `src/test/python_tests/test_server.py` を参照してください。LSP 経由でツールを実行する際の様々な側面をテストするには、ここに記載されている他のプロジェクトを参照してください。
 
-If you have installed the test requirements you should be able to see the tests in the test explorer.
+テスト要件をインストール済みであれば、テストエクスプローラーでテストを確認できます。
 
-You can also run all tests using `nox --session tests` command.
+`nox --session tests` コマンドを使用して、すべてのテストを実行することもできます。
 
-## Linting
+## リンティング
 
-Run `nox --session lint` to run linting on both Python and TypeScript code. Please update the nox file if you want to use a different linter and formatter.
+Python コードと TypeScript コードの両方でリンティングを実行するには、`nox --session lint` を実行してください。別のリンターとフォーマッタを使用する場合は、nox ファイルを更新してください。
 
-## Packaging and Publishing
+## パッケージ化と公開
 
-1. Update various fields in `package.json`. At minimum, check the following fields and update them accordingly. See [extension manifest reference](https://code.visualstudio.com/api/references/extension-manifest) to add more fields:
-    - `"publisher"`: Update this to your publisher id from <https://marketplace.visualstudio.com/>.
-    - `"version"`: See <https://semver.org/> for details of requirements and limitations for this field.
-    - `"license"`: Update license as per your project. Defaults to `MIT`.
-    - `"keywords"`: Update keywords for your project, these will be used when searching in the VS Code marketplace.
-    - `"categories"`: Update categories for your project, makes it easier to filter in the VS Code marketplace.
-    - `"homepage"`, `"repository"`, and `"bugs"` : Update URLs for these fields to point to your project.
-    - **Optional** Add `"icon"` field with relative path to a image file to use as icon for this project.
-1. Make sure to check the following markdown files:
-    - **REQUIRED** First time only: `CODE_OF_CONDUCT.md`, `LICENSE`, `SUPPORT.md`, `SECURITY.md`
-    - Every Release: `CHANGELOG.md`
-1. Build package using `nox --session build_package`.
-1. Take the generated `.vsix` file and upload it to your extension management page <https://marketplace.visualstudio.com/manage>.
+1. `package.json` 内の各種フィールドを更新します。少なくとも、以下のフィールドを確認し、必要に応じて更新してください。フィールドを追加するには、[拡張機能マニフェスト リファレンス](https://code.visualstudio.com/api/references/extension-manifest) を参照してください。
+    - `"publisher"`: <https://marketplace.visualstudio.com/> から取得したパブリッシャー ID に更新します。
+    - `"version"`: このフィールドの要件と制限事項の詳細については、<https://semver.org/> を参照してください。
+    - `"license"`: プロジェクトに応じてライセンスを更新します。デフォルトは `MIT` です。
+    - `"keywords"`: プロジェクトのキーワードを更新します。これらは VS Code マーケットプレイスで検索する際に使用されます。
+    - `"categories"`: プロジェクトのカテゴリを更新します。VS Code マーケットプレイスでのフィルタリングが容易になります。
+    - `"homepage"`、`"repository"`、`"bugs"` : これらのフィールドの URL を更新し、プロジェクトを参照するようにします。
+    - **オプション** このプロジェクトのアイコンとして使用する画像ファイルへの相対パスを指定した `"icon"` フィールドを追加します。
+1. 以下の Markdown ファイルを確認してください。
+    - **必須** 初回のみ: `CODE_OF_CONDUCT.md`、`LICENSE`、`SUPPORT.md`、`SECURITY.md`
+    - すべてのリリース: `CHANGELOG.md`
+1. `nox --session build_package` を使用してパッケージをビルドします。
+1. 生成された `.vsix` ファイルを拡張機能管理ページ <https://marketplace.visualstudio.com/manage> にアップロードします。
 
-To do this from the command line see here <https://code.visualstudio.com/api/working-with-extensions/publishing-extension>
+コマンドラインからこれを行うには、こちら <https://code.visualstudio.com/api/working-with-extensions/publishing-extension> を参照してください。
 
-## Upgrading Dependencies
+## 依存関係のアップグレード
 
-Dependabot yml is provided to make it easy to setup upgrading dependencies in this extension. Be sure to add the labels used in the dependabot to your repo.
+Dependabot yml は、この拡張機能の依存関係のアップグレードを簡単に設定できるように提供されています。dependabot で使用されているラベルをリポジトリに追加してください。
 
-To manually upgrade your local project:
+ローカルプロジェクトを手動でアップグレードするには：
 
-1. Create a new branch
-1. Run `npm update` to update node modules.
-1. Run `nox --session setup` to upgrade python packages.
+1. 新しいブランチを作成します。
+1. `npm update` を実行して Node.js モジュールを更新します。
+1. `nox --session setup` を実行して Python パッケージをアップグレードします。
 
-## Troubleshooting
+## トラブルシューティング
 
-### Changing path or name of `lsp_server.py` something else
+### `lsp_server.py` のパスまたは名前を変更する
 
-If you want to change the name of `lsp_server.py` to something else, you can. Be sure to update `constants.ts` and `src/test/python_tests/lsp_test_client/session.py`.
+`lsp_server.py` の名前を別の名前に変更したい場合は、変更可能です。`constants.ts` と `src/test/python_tests/lsp_test_client/session.py` を必ず更新してください。
 
-Also make sure that the inserted paths in `lsp_server.py` are pointing to the right folders to pick up the dependent packages.
+また、`lsp_server.py` に挿入されたパスが、依存パッケージを取得するために正しいフォルダを指していることを確認してください。
 
-### Module not found errors
+### モジュールが見つからないエラー
 
-This can occurs if `bundled/libs` is empty. That is the folder where we put your tool and other dependencies. Be sure to follow the build steps need for creating and bundling the required libs.
+これは、`bundled/libs` が空の場合に発生する可能性があります。これは、ツールやその他の依存関係を配置するフォルダです。必要なライブラリの作成とバンドルに必要なビルド手順に従ってください。
 
-Common one is [_pygls_][pygls] module not found.
-
-# TODO: The maintainer of this repo has not yet edited this file
-
-**Repo Owner** Make sure you update this. As a repository owner you will need to update this file with specific instructions for your extension.
+よくあるエラーは、[_pygls_][pygls] モジュールが見つかりません。
 
 [pygls]: https://github.com/openlawlibrary/pygls
