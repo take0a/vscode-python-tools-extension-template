@@ -14,7 +14,7 @@ def update_sys_path(path_to_add: str) -> None:
         sys.path.append(path_to_add)
 
 
-# Ensure debugger is loaded before we load anything else, to debug initialization.
+# 初期化をデバッグするために、他のものをロードする前にデバッガーがロードされていることを確認します。
 debugger_path = os.getenv("DEBUGPY_PATH", None)
 if debugger_path:
     if debugger_path.endswith("debugpy"):
@@ -25,15 +25,15 @@ if debugger_path:
     # pylint: disable=wrong-import-position,import-error
     import debugpy
 
-    # 5678 is the default port, If you need to change it update it here
-    # and in launch.json.
+    # 5678 はデフォルトのポートです。
+    # 変更する必要がある場合は、ここと launch.json で更新してください。
     debugpy.connect(5678)
 
-    # This will ensure that execution is paused as soon as the debugger
-    # connects to VS Code. If you don't want to pause here comment this
-    # line and set breakpoints as appropriate.
+    # これにより、デバッガーが VS Code に接続するとすぐに実行が一時停止されます。
+    # ここで一時停止したくない場合は、この行をコメントアウトし、
+    # 適切なブレークポイントを設定してください。
     debugpy.breakpoint()
 
 SERVER_PATH = os.fspath(pathlib.Path(__file__).parent / "lsp_server.py")
-# NOTE: Set breakpoint in `lsp_server.py` before continuing.
+# 注意: 続行する前に、`lsp_server.py` にブレークポイントを設定してください。
 runpy.run_path(SERVER_PATH, run_name="__main__")

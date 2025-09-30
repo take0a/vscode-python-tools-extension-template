@@ -1,15 +1,13 @@
-# This file is used to generate requirements.txt.
-# NOTE:
-# Use Python 3.9 or greater which ever is the minimum version of the python
-# you plan on supporting when creating the environment or using pip-tools.
-# Only run the commands below to manully upgrade packages in requirements.txt:
+# このファイルは requirements.txt を生成するために使用されます。
+# 注:
+# 環境作成時または pip-tools 使用時には、サポートする予定の Python の最小バージョンである Python 3.9 以上を使用してください。
+# requirements.txt 内のパッケージを手動でアップグレードするには、以下のコマンドのみを実行してください。
 # 1) python -m pip install pip-tools
 # 2) pip-compile --generate-hashes --resolver=backtracking --upgrade ./requirements.in
-# If you are using nox commands to setup or build package you don't need to
-# run the above commands manually.
+# パッケージのセットアップまたはビルドに nox コマンドを使用している場合は、上記のコマンドを手動で実行する必要はありません。
 
 # Required packages
 pygls
 packaging
 
-# TODO: Add your tool here
+# ここにツールを追加

@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
-"""Utility functions and classes for use with running tools over LSP."""
+"""LSP 上でツールを実行するときに使用するユーティリティ関数とクラス。"""
 from __future__ import annotations
 
 import contextlib
@@ -14,13 +14,13 @@ import sys
 import threading
 from typing import Any, Callable, List, Sequence, Tuple, Union
 
-# Save the working directory used when loading this module
+# このモジュールをロードするときに使用する作業ディレクトリを保存します
 SERVER_CWD = os.getcwd()
 CWD_LOCK = threading.Lock()
 
 
 def as_list(content: Union[Any, List[Any], Tuple[Any]]) -> Union[List[Any], Tuple[Any]]:
-    """Ensures we always get a list"""
+    """常にリストを取得することを保証する"""
     if isinstance(content, (list, tuple)):
         return content
     return [content]
@@ -36,25 +36,25 @@ _site_paths = tuple(
 
 
 def is_same_path(file_path1, file_path2) -> bool:
-    """Returns true if two paths are the same."""
+    """2 つのパスが同じ場合は true を返します。"""
     return os.path.normcase(os.path.normpath(file_path1)) == os.path.normcase(
         os.path.normpath(file_path2)
     )
 
 
 def is_current_interpreter(executable) -> bool:
-    """Returns true if the executable path is same as the current interpreter."""
+    """実行可能パスが現在のインタープリターと同じ場合は true を返します。"""
     return is_same_path(executable, sys.executable)
 
 
 def is_stdlib_file(file_path) -> bool:
-    """Return True if the file belongs to standard library."""
+    """ファイルが標準ライブラリに属している場合は True を返します。"""
     return os.path.normcase(os.path.normpath(file_path)).startswith(_site_paths)
 
 
 # pylint: disable-next=too-few-public-methods
 class RunResult:
-    """Object to hold result from running tool."""
+    """実行中のツールの結果を保持するオブジェクト。"""
 
     def __init__(self, stdout: str, stderr: str):
         self.stdout: str = stdout
@@ -62,7 +62,7 @@ class RunResult:
 
 
 class CustomIO(io.TextIOWrapper):
-    """Custom stream object to replace stdio."""
+    """stdio を置き換えるカスタム ストリーム オブジェクト。"""
 
     name = None
 
@@ -72,18 +72,18 @@ class CustomIO(io.TextIOWrapper):
         super().__init__(self._buffer, encoding=encoding, newline=newline)
 
     def close(self):
-        """Provide this close method which is used by some tools."""
+        """いくつかのツールで使用されるこの close メソッドを提供します。"""
         # This is intentionally empty.
 
     def get_value(self) -> str:
-        """Returns value from the buffer as string."""
+        """バッファからの値を文字列として返します。"""
         self.seek(0)
         return self.read()
 
 
 @contextlib.contextmanager
 def substitute_attr(obj: Any, attribute: str, new_value: Any):
-    """Manage object attributes context when using runpy.run_module()."""
+    """runpy.run_module() を使用するときにオブジェクト属性のコンテキストを管理します。"""
     old_value = getattr(obj, attribute)
     setattr(obj, attribute, new_value)
     yield
@@ -92,7 +92,7 @@ def substitute_attr(obj: Any, attribute: str, new_value: Any):
 
 @contextlib.contextmanager
 def redirect_io(stream: str, new_stream):
-    """Redirect stdio streams to a custom stream."""
+    """stdio ストリームをカスタム ストリームにリダイレクトします。"""
     old_stream = getattr(sys, stream)
     setattr(sys, stream, new_stream)
     yield
@@ -101,7 +101,7 @@ def redirect_io(stream: str, new_stream):
 
 @contextlib.contextmanager
 def change_cwd(new_cwd):
-    """Change working directory before running code."""
+    """コードを実行する前に作業ディレクトリを変更します。"""
     os.chdir(new_cwd)
     yield
     os.chdir(SERVER_CWD)
@@ -110,7 +110,7 @@ def change_cwd(new_cwd):
 def _run_module(
     module: str, argv: Sequence[str], use_stdin: bool, source: str = None
 ) -> RunResult:
-    """Runs as a module."""
+    """モジュールとして実行されます。"""
     str_output = CustomIO("<stdout>", encoding="utf-8")
     str_error = CustomIO("<stderr>", encoding="utf-8")
 
@@ -133,7 +133,7 @@ def _run_module(
 def run_module(
     module: str, argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None
 ) -> RunResult:
-    """Runs as a module."""
+    """モジュールとして実行されます。"""
     with CWD_LOCK:
         if is_same_path(os.getcwd(), cwd):
             return _run_module(module, argv, use_stdin, source)
@@ -144,7 +144,7 @@ def run_module(
 def run_path(
     argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None
 ) -> RunResult:
-    """Runs as an executable."""
+    """実行可能ファイルとして実行されます。"""
     if use_stdin:
         with subprocess.Popen(
             argv,
@@ -174,7 +174,7 @@ def run_api(
     cwd: str,
     source: str = None,
 ) -> RunResult:
-    """Run a API."""
+    """API を実行します。"""
     with CWD_LOCK:
         if is_same_path(os.getcwd(), cwd):
             return _run_api(callback, argv, use_stdin, source)

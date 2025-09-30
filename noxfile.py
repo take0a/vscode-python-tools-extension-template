@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
-"""All the action we need during build"""
+"""ビルド中に必要なすべてのアクション"""
 
 import json
 import os
@@ -72,7 +72,7 @@ def _update_npm_packages(session: nox.Session) -> None:
             latest = "^" + data["dist-tags"]["latest"]
             package_json["devDependencies"][package] = latest
 
-    # Ensure engine matches the package
+    # エンジンがパッケージと一致していることを確認する
     if (
         package_json["engines"]["vscode"]
         != package_json["devDependencies"]["@types/vscode"]
@@ -82,7 +82,7 @@ def _update_npm_packages(session: nox.Session) -> None:
         )
 
     new_package_json = json.dumps(package_json, indent=4)
-    # JSON dumps uses \n for line ending on all platforms by default
+    # JSONダンプはデフォルトですべてのプラットフォームで行末に\nを使用します。
     if not new_package_json.endswith("\n"):
         new_package_json += "\n"
     package_json_path.write_text(new_package_json, encoding="utf-8")
@@ -125,19 +125,19 @@ def lint(session: nox.Session) -> None:
     )
     session.run("pylint", "-d", "W0511", "noxfile.py")
 
-    # check formatting using black
+    # black を使用して書式をチェックする
     session.install("black")
     session.run("black", "--check", "./bundled/tool")
     session.run("black", "--check", "./src/test/python_tests")
     session.run("black", "--check", "noxfile.py")
 
-    # check import sorting using isort
+    # isortを使用してインポートのソートを確認する
     session.install("isort")
     session.run("isort", "--check", "./bundled/tool")
     session.run("isort", "--check", "./src/test/python_tests")
     session.run("isort", "--check", "noxfile.py")
 
-    # check typescript code
+    # TypeScriptコードを確認する
     session.run("npm", "run", "lint", external=True)
 
 

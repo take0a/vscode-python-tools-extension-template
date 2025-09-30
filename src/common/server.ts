@@ -29,7 +29,7 @@ async function createServer(
     const command = settings.interpreter[0];
     const cwd = settings.cwd;
 
-    // Set debugger path needed for debugging python code.
+    // Python コードのデバッグに必要なデバッガー パスを設定します。
     const newEnv = { ...process.env };
     const debuggerPath = await getDebuggerPath();
     const isDebugScript = await fsapi.pathExists(DEBUG_SERVER_SCRIPT_PATH);
@@ -39,10 +39,10 @@ async function createServer(
         newEnv.USE_DEBUGPY = 'False';
     }
 
-    // Set import strategy
+    // インポート戦略を設定する
     newEnv.LS_IMPORT_STRATEGY = settings.importStrategy;
 
-    // Set notification type
+    // 通知の種類を設定する
     newEnv.LS_SHOW_NOTIFICATION = settings.showNotifications;
 
     const args =
@@ -57,9 +57,9 @@ async function createServer(
         options: { cwd, env: newEnv },
     };
 
-    // Options to control the language client
+    // 言語クライアントを制御するオプション
     const clientOptions: LanguageClientOptions = {
-        // Register the server for python documents
+        // Pythonドキュメント用のサーバーを登録する
         documentSelector: isVirtualWorkspace()
             ? [{ language: 'python' }]
             : [

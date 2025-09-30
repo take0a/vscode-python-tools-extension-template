@@ -15,7 +15,7 @@ from typing import Any, Optional, Sequence
 
 
 # **********************************************************
-# Update sys.path before importing any bundled libraries.
+# バンドルされたライブラリをインポートする前に、sys.path を更新します。
 # **********************************************************
 def update_sys_path(path_to_add: str, strategy: str) -> None:
     """Add given path to `sys.path`."""
@@ -26,14 +26,14 @@ def update_sys_path(path_to_add: str, strategy: str) -> None:
             sys.path.append(path_to_add)
 
 
-# Ensure that we can import LSP libraries, and other bundled libraries.
+# LSP ライブラリやその他のバンドル ライブラリをインポートできることを確認します。
 update_sys_path(
     os.fspath(pathlib.Path(__file__).parent.parent / "libs"),
     os.getenv("LS_IMPORT_STRATEGY", "useBundled"),
 )
 
 # **********************************************************
-# Imports needed for the language server goes below this.
+# 言語サーバーに必要なインポートはこれより下になります。
 # **********************************************************
 # pylint: disable=wrong-import-position,import-error
 import lsp_jsonrpc as jsonrpc
@@ -46,14 +46,14 @@ GLOBAL_SETTINGS = {}
 RUNNER = pathlib.Path(__file__).parent / "lsp_runner.py"
 
 MAX_WORKERS = 5
-# TODO: Update the language server name and version.
+
 LSP_SERVER = server.LanguageServer(
-    name="<pytool-display-name>", version="<server version>", max_workers=MAX_WORKERS
+    name="VSCode Python Extension", version="2022.0.0-dev", max_workers=MAX_WORKERS
 )
 
 
 # **********************************************************
-# Tool specific code goes below this.
+# ツール固有のコードはこれ以下に記述します。
 # **********************************************************
 
 # Reference:
@@ -65,32 +65,24 @@ LSP_SERVER = server.LanguageServer(
 #  Black: https://github.com/microsoft/vscode-black-formatter/blob/main/bundled/tool
 #  isort: https://github.com/microsoft/vscode-isort/blob/main/bundled/tool
 
-# TODO: Update TOOL_MODULE with the module name for your tool.
-# e.g, TOOL_MODULE = "pylint"
-TOOL_MODULE = "<pytool-module>"
+TOOL_MODULE = "pyext"
 
-# TODO: Update TOOL_DISPLAY with a display name for your tool.
-# e.g, TOOL_DISPLAY = "Pylint"
-TOOL_DISPLAY = "<pytool-display-name>"
+TOOL_DISPLAY = "VSCode Python Extension"
 
-# TODO: Update TOOL_ARGS with default argument you have to pass to your tool in
-# all scenarios.
 TOOL_ARGS = []  # default arguments always passed to your tool.
 
 
-# TODO: If your tool is a linter then update this section.
-# Delete "Linting features" section if your tool is NOT a linter.
 # **********************************************************
-# Linting features start here
+# リンティング機能はここから始まります
 # **********************************************************
 
-#  See `pylint` implementation for a full featured linter extension:
+# フル機能のリンター拡張機能については `pylint` 実装を参照してください。
 #  Pylint: https://github.com/microsoft/vscode-pylint/blob/main/bundled/tool
 
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_OPEN)
 def did_open(params: lsp.DidOpenTextDocumentParams) -> None:
-    """LSP handler for textDocument/didOpen request."""
+    """textDocument/didOpen リクエストの LSP ハンドラー。"""
     document = LSP_SERVER.workspace.get_document(params.text_document.uri)
     diagnostics: list[lsp.Diagnostic] = _linting_helper(document)
     LSP_SERVER.publish_diagnostics(document.uri, diagnostics)
@@ -98,7 +90,7 @@ def did_open(params: lsp.DidOpenTextDocumentParams) -> None:
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_SAVE)
 def did_save(params: lsp.DidSaveTextDocumentParams) -> None:
-    """LSP handler for textDocument/didSave request."""
+    """textDocument/didSave リクエストの LSP ハンドラー。"""
     document = LSP_SERVER.workspace.get_document(params.text_document.uri)
     diagnostics: list[lsp.Diagnostic] = _linting_helper(document)
     LSP_SERVER.publish_diagnostics(document.uri, diagnostics)
@@ -106,26 +98,26 @@ def did_save(params: lsp.DidSaveTextDocumentParams) -> None:
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_DID_CLOSE)
 def did_close(params: lsp.DidCloseTextDocumentParams) -> None:
-    """LSP handler for textDocument/didClose request."""
+    """textDocument/didClose リクエストの LSP ハンドラー。"""
     document = LSP_SERVER.workspace.get_document(params.text_document.uri)
-    # Publishing empty diagnostics to clear the entries for this file.
+    # このファイルのエントリをクリアするために空の診断を公開します。
     LSP_SERVER.publish_diagnostics(document.uri, [])
 
 
 def _linting_helper(document: workspace.Document) -> list[lsp.Diagnostic]:
-    # TODO: Determine if your tool supports passing file content via stdin.
-    # If you want to support linting on change then your tool will need to
-    # support linting over stdin to be effective. Read, and update
-    # _run_tool_on_document and _run_tool functions as needed for your project.
+    # ツールが標準入力経由でのファイル内容の受け渡しをサポートしているかどうかを確認してください。
+    # 変更時のリンティングをサポートする場合、ツールが効果的に機能するには、
+    # 標準入力経由のリンティングをサポートしている必要があります。
+    # プロジェクトの必要に応じて、_run_tool_on_document 関数と _run_tool 関数を読み、
+    # 更新してください。
     result = _run_tool_on_document(document)
     return _parse_output_using_regex(result.stdout) if result.stdout else []
 
 
-# TODO: If your linter outputs in a known format like JSON, then parse
-# accordingly. But incase you need to parse the output using RegEx here
-# is a helper you can work with.
-# flake8 example:
-# If you use following format argument with flake8 you can use the regex below to parse it.
+# リンターの出力がJSONなどの既知の形式である場合は、それに応じて解析してください。
+# ただし、正規表現を使用して出力を解析する必要がある場合は、以下のヘルパーをご利用ください。
+# flake8の例:
+# flake8で以下のフォーマット引数を使用すると、以下の正規表現を使用して解析できます。
 # TOOL_ARGS += ["--format='%(row)d,%(col)d,%(code).1s,%(code)s:%(text)s'"]
 # DIAGNOSTIC_RE =
 #    r"(?P<line>\d+),(?P<column>-?\d+),(?P<type>\w+),(?P<code>\w+\d+):(?P<message>[^\r\n]*)"
@@ -136,9 +128,7 @@ def _parse_output_using_regex(content: str) -> list[lsp.Diagnostic]:
     lines: list[str] = content.splitlines()
     diagnostics: list[lsp.Diagnostic] = []
 
-    # TODO: Determine if your linter reports line numbers starting at 1 (True) or 0 (False).
     line_at_1 = True
-    # TODO: Determine if your linter reports column numbers starting at 1 (True) or 0 (False).
     column_at_1 = True
 
     line_offset = 1 if line_at_1 else 0
@@ -168,26 +158,20 @@ def _parse_output_using_regex(content: str) -> list[lsp.Diagnostic]:
     return diagnostics
 
 
-# TODO: if you want to handle setting specific severity for your linter
-# in a user configurable way, then look at look at how it is implemented
-# for `pylint` extension from our team.
+# ユーザーが設定可能な方法でリンターの特定の重大度を設定したい場合は、
+# 私たちのチームが実装した `pylint` 拡張機能をご覧ください。
 # Pylint: https://github.com/microsoft/vscode-pylint
-# Follow the flow of severity from the settings in package.json to the server.
+# package.json の設定からサーバーへの重大度フローに従ってください。
 def _get_severity(*_codes: list[str]) -> lsp.DiagnosticSeverity:
-    # TODO: All reported issues from linter are treated as warning.
-    # change it as appropriate for your linter.
     return lsp.DiagnosticSeverity.Warning
 
 
 # **********************************************************
-# Linting features end here
+# リンティング機能はここで終了です
 # **********************************************************
 
-# TODO: If your tool is a formatter then update this section.
-# Delete "Formatting features" section if your tool is NOT a
-# formatter.
 # **********************************************************
-# Formatting features start here
+# 書式設定機能はここから始まります
 # **********************************************************
 #  Sample implementations:
 #  Black: https://github.com/microsoft/vscode-black-formatter/blob/main/bundled/tool
@@ -195,26 +179,25 @@ def _get_severity(*_codes: list[str]) -> lsp.DiagnosticSeverity:
 
 @LSP_SERVER.feature(lsp.TEXT_DOCUMENT_FORMATTING)
 def formatting(params: lsp.DocumentFormattingParams) -> list[lsp.TextEdit] | None:
-    """LSP handler for textDocument/formatting request."""
-    # If your tool is a formatter you can use this handler to provide
-    # formatting support on save. You have to return an array of lsp.TextEdit
-    # objects, to provide your formatted results.
+    """textDocument/formatting 要求の LSP ハンドラー。"""
+    # ツールがフォーマッタである場合、このハンドラを使用して保存時にフォーマット処理をサポートできます。
+    # フォーマットされた結果を返すには、lsp.TextEditオブジェクトの配列を返す必要があります。
 
     document = LSP_SERVER.workspace.get_document(params.text_document.uri)
     edits = _formatting_helper(document)
     if edits:
         return edits
 
-    # NOTE: If you provide [] array, VS Code will clear the file of all contents.
-    # To indicate no changes to file return None.
+    # 注意: [] 配列を指定すると、VS Code はファイルのすべての内容をクリアします。
+    # ファイルに変更がないことを示すには、None を返します。
     return None
 
 
 def _formatting_helper(document: workspace.Document) -> list[lsp.TextEdit] | None:
-    # TODO: For formatting on save support the formatter you use must support
-    # formatting via stdin.
-    # Read, and update_run_tool_on_document and _run_tool functions as needed
-    # for your formatter.
+    # 保存時のフォーマットをサポートするには、使用するフォーマッタが
+    # 標準入力経由のフォーマットをサポートしている必要があります。
+    # フォーマッタの必要に応じて、読み取り、update_run_tool_on_document 
+    # および _run_tool 関数を実行してください。
     result = _run_tool_on_document(document, use_stdin=True)
     if result.stdout:
         new_source = _match_line_endings(document, result.stdout)
@@ -231,7 +214,7 @@ def _formatting_helper(document: workspace.Document) -> list[lsp.TextEdit] | Non
 
 
 def _get_line_endings(lines: list[str]) -> str:
-    """Returns line endings used in the text."""
+    """テキストで使用されている行末文字列を返します。"""
     try:
         if lines[0][-2:] == "\r\n":
             return "\r\n"
@@ -241,7 +224,7 @@ def _get_line_endings(lines: list[str]) -> str:
 
 
 def _match_line_endings(document: workspace.Document, text: str) -> str:
-    """Ensures that the edited text line endings matches the document line endings."""
+    """編集されたテキストの行末がドキュメントの行末と一致することを確認します。"""
     expected = _get_line_endings(document.source.splitlines(keepends=True))
     actual = _get_line_endings(text.splitlines(keepends=True))
     if actual == expected or actual is None or expected is None:
@@ -250,16 +233,16 @@ def _match_line_endings(document: workspace.Document, text: str) -> str:
 
 
 # **********************************************************
-# Formatting features ends here
+# 書式設定機能はここで終了です
 # **********************************************************
 
 
 # **********************************************************
-# Required Language Server Initialization and Exit handlers.
+# 必要な言語サーバーの初期化および終了ハンドラー。
 # **********************************************************
 @LSP_SERVER.feature(lsp.INITIALIZE)
 def initialize(params: lsp.InitializeParams) -> None:
-    """LSP handler for initialize request."""
+    """初期化要求の LSP ハンドラー。"""
     log_to_output(f"CWD Server: {os.getcwd()}")
 
     paths = "\r\n   ".join(sys.path)
@@ -279,13 +262,13 @@ def initialize(params: lsp.InitializeParams) -> None:
 
 @LSP_SERVER.feature(lsp.EXIT)
 def on_exit(_params: Optional[Any] = None) -> None:
-    """Handle clean up on exit."""
+    """終了時にクリーンアップを処理します。"""
     jsonrpc.shutdown_json_rpc()
 
 
 @LSP_SERVER.feature(lsp.SHUTDOWN)
 def on_shutdown(_params: Optional[Any] = None) -> None:
-    """Handle clean up on shutdown."""
+    """シャットダウン時にクリーンアップを処理します。"""
     jsonrpc.shutdown_json_rpc()
 
 
@@ -337,7 +320,7 @@ def _get_document_key(document: workspace.Document):
         document_workspace = pathlib.Path(document.path)
         workspaces = {s["workspaceFS"] for s in WORKSPACE_SETTINGS.values()}
 
-        # Find workspace settings for the given file.
+        # 指定されたファイルのワークスペース設定を見つけます。
         while document_workspace != document_workspace.parent:
             if str(document_workspace) in workspaces:
                 return str(document_workspace)
@@ -352,7 +335,7 @@ def _get_settings_by_document(document: workspace.Document | None):
 
     key = _get_document_key(document)
     if key is None:
-        # This is either a non-workspace file or there is no workspace.
+        # これはワークスペース以外のファイルであるか、ワークスペースがありません。
         key = os.fspath(pathlib.Path(document.path).parent)
         return {
             "cwd": key,
@@ -365,7 +348,7 @@ def _get_settings_by_document(document: workspace.Document | None):
 
 
 # *****************************************************
-# Internal execution APIs.
+# 内部実行 API
 # *****************************************************
 def _run_tool_on_document(
     document: workspace.Document,
@@ -380,16 +363,16 @@ def _run_tool_on_document(
     if extra_args is None:
         extra_args = []
     if str(document.uri).startswith("vscode-notebook-cell"):
-        # TODO: Decide on if you want to skip notebook cells.
-        # Skip notebook cells
+        # ノートブックのセルをスキップするかどうかを決定します。
+        # ノートブックのセルをスキップ
         return None
 
     if utils.is_stdlib_file(document.path):
-        # TODO: Decide on if you want to skip standard library files.
-        # Skip standard library python files.
+        # 標準ライブラリファイルをスキップするかどうかを決定します。
+        # 標準ライブラリの Python ファイルをスキップします。
         return None
 
-    # deep copy here to prevent accidentally updating global settings.
+    # 誤ってグローバル設定を更新しないように、ここでディープコピーを実行します。
     settings = copy.deepcopy(_get_settings_by_document(document))
 
     code_workspace = settings["workspaceFS"]
@@ -398,40 +381,41 @@ def _run_tool_on_document(
     use_path = False
     use_rpc = False
     if settings["path"]:
-        # 'path' setting takes priority over everything.
+        # 「path」設定が何よりも優先されます。
         use_path = True
         argv = settings["path"]
     elif settings["interpreter"] and not utils.is_current_interpreter(
         settings["interpreter"][0]
     ):
-        # If there is a different interpreter set use JSON-RPC to the subprocess
-        # running under that interpreter.
+        # 異なるインタープリターが設定されている場合は、そのインタープリターで
+        # 実行されているサブプロセスに対して JSON-RPC を使用します。
         argv = [TOOL_MODULE]
         use_rpc = True
     else:
-        # if the interpreter is same as the interpreter running this
-        # process then run as module.
+        # インタープリターがこのプロセスを実行しているインタープリターと同じ場合は、
+        # モジュールとして実行されます。
         argv = [TOOL_MODULE]
 
     argv += TOOL_ARGS + settings["args"] + extra_args
 
     if use_stdin:
-        # TODO: update these to pass the appropriate arguments to provide document contents
-        # to tool via stdin.
-        # For example, for pylint args for stdin looks like this:
-        #     pylint --from-stdin <path>
-        # Here `--from-stdin` path is used by pylint to make decisions on the file contents
-        # that are being processed. Like, applying exclusion rules.
-        # It should look like this when you pass it:
-        #     argv += ["--from-stdin", document.path]
-        # Read up on how your tool handles contents via stdin. If stdin is not supported use
-        # set use_stdin to False, or provide path, what ever is appropriate for your tool.
+        # ドキュメントの内容をツールに標準入力経由で提供するために、
+        # 適切な引数を渡すようにこれらを更新してください。
+        # 例えば、pylint の場合、標準入力への引数は以下のようになります。
+        #   pylint --from-stdin <path>
+        # ここで、`--from-stdin` パスは、pylint が処理対象のファイルの内容を
+        # 判断するために使用されます。例えば、除外ルールを適用するなどです。
+        # 引数は以下のようになります。
+        #   argv += ["--from-stdin", document.path]
+        # お使いのツールが標準入力経由でコンテンツをどのように処理するかを確認してください。
+        # 標準入力がサポートされていない場合は、use_stdin を False に設定するか、
+        # パスを指定するなど、ツールに適した方法を使用してください。
         argv += []
     else:
         argv += [document.path]
 
     if use_path:
-        # This mode is used when running executables.
+        # このモードは実行可能ファイルを実行するときに使用されます。
         log_to_output(" ".join(argv))
         log_to_output(f"CWD Server: {cwd}")
         result = utils.run_path(
@@ -443,8 +427,8 @@ def _run_tool_on_document(
         if result.stderr:
             log_to_output(result.stderr)
     elif use_rpc:
-        # This mode is used if the interpreter running this server is different from
-        # the interpreter used for running this server.
+        # このモードは、このサーバーを実行しているインタープリターが、
+        # このサーバーの実行に使用されているインタープリターと異なる場合に使用されます。
         log_to_output(" ".join(settings["interpreter"] + ["-m"] + argv))
         log_to_output(f"CWD Linter: {cwd}")
 
@@ -463,18 +447,20 @@ def _run_tool_on_document(
         elif result.stderr:
             log_to_output(result.stderr)
     else:
-        # In this mode the tool is run as a module in the same process as the language server.
+        # このモードでは、ツールは言語サーバーと同じプロセス内のモジュールとして実行されます。
         log_to_output(" ".join([sys.executable, "-m"] + argv))
         log_to_output(f"CWD Linter: {cwd}")
-        # This is needed to preserve sys.path, in cases where the tool modifies
-        # sys.path and that might not work for this scenario next time around.
+        # これは、ツールが sys.path を変更し、次回このシナリオでは機能しない可能性がある場合に、
+        # sys.path を保持するために必要です。
         with utils.substitute_attr(sys, "path", sys.path[:]):
             try:
-                # TODO: `utils.run_module` is equivalent to running `python -m <pytool-module>`.
-                # If your tool supports a programmatic API then replace the function below
-                # with code for your tool. You can also use `utils.run_api` helper, which
-                # handles changing working directories, managing io streams, etc.
-                # Also update `_run_tool` function and `utils.run_module` in `lsp_runner.py`.
+                # `utils.run_module` は `python -m pyext` の実行と同等です。
+                # ツールがプログラムAPIをサポートしている場合は、以下の関数を
+                # ツールのコードに置き換えてください。
+                # 作業ディレクトリの変更やIOストリームの管理などを処理する 
+                # `utils.run_api` ヘルパーも使用できます。
+                # また、`lsp_runner.py` の `_run_tool` 関数と 
+                # `utils.run_module` も更新してください。
                 result = utils.run_module(
                     module=TOOL_MODULE,
                     argv=argv,
@@ -494,7 +480,7 @@ def _run_tool_on_document(
 
 def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
     """Runs tool."""
-    # deep copy here to prevent accidentally updating global settings.
+    # 誤ってグローバル設定を更新しないように、ここでディープコピーを実行します。
     settings = copy.deepcopy(_get_settings_by_document(None))
 
     code_workspace = settings["workspaceFS"]
@@ -503,33 +489,33 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
     use_path = False
     use_rpc = False
     if len(settings["path"]) > 0:
-        # 'path' setting takes priority over everything.
+        # 「path」設定が何よりも優先されます。
         use_path = True
         argv = settings["path"]
     elif len(settings["interpreter"]) > 0 and not utils.is_current_interpreter(
         settings["interpreter"][0]
     ):
-        # If there is a different interpreter set use JSON-RPC to the subprocess
-        # running under that interpreter.
+        # 異なるインタープリターが設定されている場合は、そのインタープリターで
+        # 実行されているサブプロセスに対して JSON-RPC を使用します。
         argv = [TOOL_MODULE]
         use_rpc = True
     else:
-        # if the interpreter is same as the interpreter running this
-        # process then run as module.
+        # インタープリターがこのプロセスを実行しているインタープリターと同じ場合は、
+        # モジュールとして実行されます。
         argv = [TOOL_MODULE]
 
     argv += extra_args
 
     if use_path:
-        # This mode is used when running executables.
+        # このモードは実行可能ファイルを実行するときに使用されます。
         log_to_output(" ".join(argv))
         log_to_output(f"CWD Server: {cwd}")
         result = utils.run_path(argv=argv, use_stdin=True, cwd=cwd)
         if result.stderr:
             log_to_output(result.stderr)
     elif use_rpc:
-        # This mode is used if the interpreter running this server is different from
-        # the interpreter used for running this server.
+        # このモードは、このサーバーを実行しているインタープリターが、
+        # このサーバーの実行に使用されているインタープリターと異なる場合に使用されます。
         log_to_output(" ".join(settings["interpreter"] + ["-m"] + argv))
         log_to_output(f"CWD Linter: {cwd}")
         result = jsonrpc.run_over_json_rpc(
@@ -546,18 +532,20 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
         elif result.stderr:
             log_to_output(result.stderr)
     else:
-        # In this mode the tool is run as a module in the same process as the language server.
+        # このモードでは、ツールは言語サーバーと同じプロセス内のモジュールとして実行されます。
         log_to_output(" ".join([sys.executable, "-m"] + argv))
         log_to_output(f"CWD Linter: {cwd}")
-        # This is needed to preserve sys.path, in cases where the tool modifies
-        # sys.path and that might not work for this scenario next time around.
+        # これは、ツールが sys.path を変更し、次回このシナリオでは機能しない
+        # 可能性がある場合に、sys.path を保持するために必要です。
         with utils.substitute_attr(sys, "path", sys.path[:]):
             try:
-                # TODO: `utils.run_module` is equivalent to running `python -m <pytool-module>`.
-                # If your tool supports a programmatic API then replace the function below
-                # with code for your tool. You can also use `utils.run_api` helper, which
-                # handles changing working directories, managing io streams, etc.
-                # Also update `_run_tool_on_document` function and `utils.run_module` in `lsp_runner.py`.
+                # `utils.run_module` は `python -m pyext` の実行と同等です。
+                # ツールがプログラム API をサポートしている場合は、
+                # 以下の関数をツールのコードに置き換えてください。
+                # 作業ディレクトリの変更や IO ストリームの管理などを処理する 
+                # `utils.run_api` ヘルパーも使用できます。
+                # また、`lsp_runner.py` の `_run_tool_on_document` 関数と 
+                # `utils.run_module` も更新してください。
                 result = utils.run_module(
                     module=TOOL_MODULE, argv=argv, use_stdin=True, cwd=cwd
                 )
@@ -572,7 +560,7 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
 
 
 # *****************************************************
-# Logging and notification.
+# ログ記録と通知。
 # *****************************************************
 def log_to_output(
     message: str, msg_type: lsp.MessageType = lsp.MessageType.Log
@@ -599,7 +587,7 @@ def log_always(message: str) -> None:
 
 
 # *****************************************************
-# Start the server.
+# サーバーを起動します。
 # *****************************************************
 if __name__ == "__main__":
     LSP_SERVER.start_io()

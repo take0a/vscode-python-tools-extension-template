@@ -1,14 +1,14 @@
 {
-    "name": "vsc-pyext",
+    "name": "pyext",
     "displayName": "VSCode Python Extension",
-    "description": "Linting support for python files using `vsc-pyext`.",
+    "description": "Linting support for python files using `pyext`.",
     "version": "2022.0.0-dev",
     "preview": true,
     "serverInfo": {
         "name": "VSCode Python Extension",
-        "module": "vsc-pyext"
+        "module": "pyext"
     },
-    "publisher": "<my-publisher>",
+    "publisher": "robon",
     "license": "MIT",
     "homepage": "https://github.com/take0a/vscode-python-tools-extension-template",
     "repository": {
@@ -24,7 +24,7 @@
     },
     "keywords": [
         "python",
-        "vsc-pyext"
+        "pyext"
     ],
     "engines": {
         "vscode": "^1.78.0"
@@ -40,7 +40,7 @@
     "capabilities": {
         "virtualWorkspaces": {
             "supported": false,
-            "description": "Virtual Workspaces are not supported with VSCode Python Extension."
+            "description": "仮想ワークスペースは、`VSCode Python Extension` ではサポートされていません。"
         }
     },
     "activationEvents": [
@@ -59,55 +59,55 @@
         "lint": "eslint src --ext ts",
         "format-check": "prettier --check 'src/**/*.ts' 'build/**/*.yml' '.github/**/*.yml'",
         "test": "node ./out/test/runTest.js",
-        "vsce-package": "vsce package -o vsc-pyext.vsix"
+        "vsce-package": "vsce package -o pyext.vsix"
     },
     "contributes": {
         "configuration": {
             "properties": {
-                "vsc-pyext.args": {
+                "pyext.args": {
                     "default": [],
-                    "description": "Arguments passed in. Each argument is a separate item in the array.",
+                    "description": "渡された引数。各引数は配列内の個別の項目です。",
                     "items": {
                         "type": "string"
                     },
                     "scope": "resource",
                     "type": "array"
                 },
-                "vsc-pyext.path": {
+                "pyext.path": {
                     "default": [],
-                    "description": "When set to a path to vsc-pyext binary, extension will use that. NOTE: Using this option may slowdown server response time.",
+                    "description": "`pyext` バイナリへのパスを設定すると、拡張機能はそのパスを使用します。注意: このオプションを使用すると、サーバーの応答時間が遅くなる可能性があります。",
                     "scope": "resource",
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
                 },
-                "vsc-pyext.importStrategy": {
+                "pyext.importStrategy": {
                     "default": "useBundled",
-                    "description": "Defines where `vsc-pyext` is imported from. This setting may be ignored if `vsc-pyext.path` is set.",
+                    "description": "`pyext` のインポート元を定義します。`pyext.path` が設定されている場合、この設定は無視される可能性があります。",
                     "enum": [
                         "useBundled",
                         "fromEnvironment"
                     ],
                     "enumDescriptions": [
-                        "Always use the bundled version of `vsc-pyext`.",
-                        "Use `vsc-pyext` from environment, fallback to bundled version only if `vsc-pyext` not available in the environment."
+                        "常に `pyext` のバンドルバージョンを使用してください。",
+                        "環境から `pyext` を使用し、環境で `pyext` が使用できない場合にのみバンドル バージョンにフォールバックします。"
                     ],
                     "scope": "window",
                     "type": "string"
                 },
-                "vsc-pyext.interpreter": {
+                "pyext.interpreter": {
                     "default": [],
-                    "description": "When set to a path to python executable, extension will use that to launch the server and any subprocess.",
+                    "description": "Python 実行可能ファイルへのパスを設定すると、拡張機能はそれを使用してサーバーとサブプロセスを起動します。",
                     "scope": "resource",
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
                 },
-                "vsc-pyext.showNotifications": {
+                "pyext.showNotifications": {
                     "default": "off",
-                    "description": "Controls when notifications are shown by this extension.",
+                    "description": "この拡張機能によって通知が表示されるタイミングを制御します。",
                     "enum": [
                         "off",
                         "onError",
@@ -115,10 +115,10 @@
                         "always"
                     ],
                     "enumDescriptions": [
-                        "All notifications are turned off, any errors or warning are still available in the logs.",
-                        "Notifications are shown only in the case of an error.",
-                        "Notifications are shown for errors and warnings.",
-                        "Notifications are show for anything that the server chooses to show."
+                        "すべての通知はオフになっていますが、エラーや警告はログに引き続き残ります。",
+                        "通知はエラーの場合にのみ表示されます。",
+                        "エラーと警告の通知が表示されます。",
+                        "サーバーが表示することを選択したものに対して通知が表示されます。"
                     ],
                     "scope": "machine",
                     "type": "string"
@@ -129,7 +129,7 @@
             {
                 "title": "Restart Server",
                 "category": "VSCode Python Extension",
-                "command": "vsc-pyext.restart"
+                "command": "pyext.restart"
             }
         ]
     },

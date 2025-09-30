@@ -1,17 +1,13 @@
-# TODO: The maintainer of this repo has not yet edited this file
+**リポジトリ所有者** 必ず更新してください。リポジトリ所有者として、拡張機能のサポート提供方法を​​決定する必要があります。
 
-**Repo Owner** Make sure you update this. As a repository owner you will need to decide how you want to offer support for your extension.
+# サポート
 
-# Support
+## 問題の報告とサポートの依頼方法
 
-## How to file issues and get help
+このプロジェクトでは、GitHub Issues を使用してバグや機能リクエストを追跡しています。重複を避けるため、新しい問題を報告する前に、既存の問題を検索してください。新しい問題については、バグまたは機能リクエストを新しい Issue として報告してください。
 
-This project uses GitHub Issues to track bugs and feature requests. Please search the existing
-issues before filing new issues to avoid duplicates. For new issues, file your bug or
-feature request as a new Issue.
+このプロジェクトの使用に関するヘルプや質問については、GitHub ディスカッションをご利用ください。
 
-For help and questions about using this project, please use the GitHub Discussions.
+## Microsoft サポートポリシー
 
-## Microsoft Support Policy
-
-Support for this **PROJECT or PRODUCT** is limited to the resources listed above.
+この **プロジェクトまたは製品** のサポートは、上記のリソースに限定されます。

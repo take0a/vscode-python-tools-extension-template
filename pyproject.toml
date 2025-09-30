@@ -2,4 +2,15 @@
 name = "vscode-python-tools-extension-template"
 version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "colorama==0.4.6",
+    "iniconfig==2.1.0",
+    "nox>=2025.5.1",
+    "packaging==25.0",
+    "pluggy==1.6.0",
+    "pygments==2.19.2",
+    "pyhamcrest==2.1.0",
+    "pytest==8.4.2",
+    "python-jsonrpc-server==0.4.0",
+    "ujson==5.11.0",
+]

@@ -17,7 +17,7 @@ TIMEOUT = 10  # 10 seconds
 
 
 def test_linting_example():
-    """Test to linting on file open."""
+    """ファイルを開いたときに lint をテストします。"""
     contents = TEST_FILE_PATH.read_text()
 
     actual = []
@@ -44,10 +44,10 @@ def test_linting_example():
             }
         )
 
-        # wait for some time to receive all notifications
+        # すべての通知を受信するまでしばらくお待ちください
         done.wait(TIMEOUT)
 
-        # TODO: Add your linter specific diagnostic result here
+        # リンター固有の診断結果をここに追加します
         expected = {
             "uri": TEST_FILE_URI,
             "diagnostics": [
@@ -94,7 +94,7 @@ def test_linting_example():
 
 
 def test_formatting_example():
-    """Test formatting a python file."""
+    """Python ファイルのフォーマットをテストします。"""
     FORMATTED_TEST_FILE_PATH = constants.TEST_DATA / "sample1" / "sample.py"
     UNFORMATTED_TEST_FILE_PATH = constants.TEST_DATA / "sample1" / "sample.unformatted"
 

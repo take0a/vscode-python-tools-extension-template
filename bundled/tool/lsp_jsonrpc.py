@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
-"""Light-weight JSON-RPC over standard IO."""
+"""標準 IO 経由の軽量 JSON-RPC"""
 
 
 import atexit
@@ -19,31 +19,31 @@ RUNNER_SCRIPT = str(pathlib.Path(__file__).parent / "lsp_runner.py")
 
 
 def to_str(text) -> str:
-    """Convert bytes to string as needed."""
+    """必要に応じてバイトを文字列に変換します。"""
     return text.decode("utf-8") if isinstance(text, bytes) else text
 
 
 class StreamClosedException(Exception):
-    """JSON RPC stream is closed."""
+    """JSON RPC ストリームが閉じられています。"""
 
     pass  # pylint: disable=unnecessary-pass
 
 
 class JsonWriter:
-    """Manages writing JSON-RPC messages to the writer stream."""
+    """ライター ストリームへの JSON-RPC メッセージの書き込みを管理します。"""
 
     def __init__(self, writer: io.TextIOWrapper):
         self._writer = writer
         self._lock = threading.Lock()
 
     def close(self):
-        """Closes the underlying writer stream."""
+        """基礎となるライター ストリームを閉じます。"""
         with self._lock:
             if not self._writer.closed:
                 self._writer.close()
 
     def write(self, data):
-        """Writes given data to stream in JSON-RPC format."""
+        """指定されたデータを JSON-RPC 形式でストリームに書き込みます。"""
         if self._writer.closed:
             raise StreamClosedException()
 
@@ -57,18 +57,18 @@ class JsonWriter:
 
 
 class JsonReader:
-    """Manages reading JSON-RPC messages from stream."""
+    """ストリームからの JSON-RPC メッセージの読み取りを管理します。"""
 
     def __init__(self, reader: io.TextIOWrapper):
         self._reader = reader
 
     def close(self):
-        """Closes the underlying reader stream."""
+        """基になるリーダー ストリームを閉じます。"""
         if not self._reader.closed:
             self._reader.close()
 
     def read(self):
-        """Reads data from the stream in JSON-RPC format."""
+        """ストリームから JSON-RPC 形式でデータを読み取ります。"""
         if self._reader.closed:
             raise StreamClosedException
         length = None
@@ -92,35 +92,35 @@ class JsonReader:
 
 
 class JsonRpc:
-    """Manages sending and receiving data over JSON-RPC."""
+    """JSON-RPC 経由のデータの送受信を管理します。"""
 
     def __init__(self, reader: io.TextIOWrapper, writer: io.TextIOWrapper):
         self._reader = JsonReader(reader)
         self._writer = JsonWriter(writer)
 
     def close(self):
-        """Closes the underlying streams."""
+        """基になるストリームを閉じます。"""
         with contextlib.suppress(Exception):
             self._reader.close()
         with contextlib.suppress(Exception):
             self._writer.close()
 
     def send_data(self, data):
-        """Send given data in JSON-RPC format."""
+        """指定されたデータを JSON-RPC 形式で送信します。"""
         self._writer.write(data)
 
     def receive_data(self):
-        """Receive data in JSON-RPC format."""
+        """JSON-RPC 形式でデータを受信します。"""
         return self._reader.read()
 
 
 def create_json_rpc(readable: BinaryIO, writable: BinaryIO) -> JsonRpc:
-    """Creates JSON-RPC wrapper for the readable and writable streams."""
+    """読み取り可能および書き込み可能なストリーム用の JSON-RPC ラッパーを作成します。"""
     return JsonRpc(readable, writable)
 
 
 class ProcessManager:
-    """Manages sub-processes launched for running tools."""
+    """ツールを実行するために起動されたサブプロセスを管理します。"""
 
     def __init__(self):
         self._args: Dict[str, Sequence[str]] = {}
@@ -130,14 +130,14 @@ class ProcessManager:
         self._thread_pool = ThreadPoolExecutor(10)
 
     def stop_all_processes(self):
-        """Send exit command to all processes and shutdown transport."""
+        """すべてのプロセスに終了コマンドを送信し、トランスポートをシャットダウンします。"""
         for i in self._rpc.values():
             with contextlib.suppress(Exception):
                 i.send_data({"id": str(uuid.uuid4()), "method": "exit"})
         self._thread_pool.shutdown(wait=False)
 
     def start_process(self, workspace: str, args: Sequence[str], cwd: str) -> None:
-        """Starts a process and establishes JSON-RPC communication over stdio."""
+        """プロセスを開始し、stdio 経由で JSON-RPC 通信を確立します。"""
         # pylint: disable=consider-using-with
         proc = subprocess.Popen(
             args,
@@ -161,7 +161,7 @@ class ProcessManager:
         self._thread_pool.submit(_monitor_process)
 
     def get_json_rpc(self, workspace: str) -> JsonRpc:
-        """Gets the JSON-RPC wrapper for the a given id."""
+        """指定された ID の JSON-RPC ラッパーを取得します。"""
         with self._lock:
             if workspace in self._rpc:
                 return self._rpc[workspace]
@@ -184,7 +184,7 @@ def _get_json_rpc(workspace: str) -> Union[JsonRpc, None]:
 def get_or_start_json_rpc(
     workspace: str, interpreter: Sequence[str], cwd: str
 ) -> Union[JsonRpc, None]:
-    """Gets an existing JSON-RPC connection or starts one and return it."""
+    """既存の JSON-RPC 接続を取得するか、接続を開始して返します。"""
     res = _get_json_rpc(workspace)
     if not res:
         args = [*interpreter, RUNNER_SCRIPT]
@@ -194,7 +194,7 @@ def get_or_start_json_rpc(
 
 
 class RpcRunResult:
-    """Object to hold result from running tool over RPC."""
+    """RPC 経由でツールを実行した結果を保持するオブジェクト。"""
 
     def __init__(self, stdout: str, stderr: str, exception: Optional[str] = None):
         self.stdout: str = stdout
@@ -212,7 +212,7 @@ def run_over_json_rpc(
     cwd: str,
     source: str = None,
 ) -> RpcRunResult:
-    """Uses JSON-RPC to execute a command."""
+    """JSON-RPC を使用してコマンドを実行します。"""
     rpc: Union[JsonRpc, None] = get_or_start_json_rpc(workspace, interpreter, cwd)
     if not rpc:
         raise Exception("Failed to run over JSON-RPC.")
@@ -250,5 +250,5 @@ def run_over_json_rpc(
 
 
 def shutdown_json_rpc():
-    """Shutdown all JSON-RPC processes."""
+    """すべての JSON-RPC プロセスをシャットダウンします。"""
     _process_manager.stop_all_processes()

@@ -11,7 +11,7 @@ import traceback
 
 
 # **********************************************************
-# Update sys.path before importing any bundled libraries.
+# バンドルされたライブラリをインポートする前に、sys.path を更新します。
 # **********************************************************
 def update_sys_path(path_to_add: str, strategy: str) -> None:
     """Add given path to `sys.path`."""
@@ -22,7 +22,7 @@ def update_sys_path(path_to_add: str, strategy: str) -> None:
             sys.path.append(path_to_add)
 
 
-# Ensure that we can import LSP libraries, and other bundled libraries.
+# LSP ライブラリやその他のバンドル ライブラリをインポートできることを確認します。
 update_sys_path(
     os.fspath(pathlib.Path(__file__).parent.parent / "libs"),
     os.getenv("LS_IMPORT_STRATEGY", "useBundled"),
@@ -46,16 +46,17 @@ while not EXIT_NOW:
 
     if method == "run":
         is_exception = False
-        # This is needed to preserve sys.path, pylint modifies
-        # sys.path and that might not work for this scenario
-        # next time around.
+        # これは sys.path を保持するために必要です。
+        # pylint は sys.path を変更するため、次回のシナリオでは機能しない可能性があります。
         with utils.substitute_attr(sys, "path", sys.path[:]):
             try:
-                # TODO: `utils.run_module` is equivalent to running `python -m <pytool-module>`.
-                # If your tool supports a programmatic API then replace the function below
-                # with code for your tool. You can also use `utils.run_api` helper, which
-                # handles changing working directories, managing io streams, etc.
-                # Also update `_run_tool_on_document` and `_run_tool` functions in `lsp_server.py`.
+                # `utils.run_module` は `python -m <pytool-module>` の実行と同等です。
+                # ツールがプログラムAPIをサポートしている場合は、
+                # 以下の関数をツールのコードに置き換えてください。
+                # 作業ディレクトリの変更やIOストリームの管理などを処理する 
+                # `utils.run_api` ヘルパーも使用できます。
+                # また、`lsp_server.py` の `_run_tool_on_document` 関数と 
+                # `_run_tool` 関数も更新してください。
                 result = utils.run_module(
                     module=msg["module"],
                     argv=msg["argv"],

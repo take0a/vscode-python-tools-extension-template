@@ -1,49 +1,47 @@
-# TODO: The maintainer of this repo has not yet edited this file
-
-**Repo Owner** Make sure you update this. As a repository owner you will need to decide how you want to handle reporting of security issues for your project.
+**リポジトリ所有者** 必ず更新してください。リポジトリ所有者は、プロジェクトのセキュリティ問題の報告をどのように処理するかを決定する必要があります。
 
 ---
 
-** Content below this line is the Security information for the template itself **
+** この行の下の内容は、テンプレート自体のセキュリティ情報です **
 
 <!-- BEGIN MICROSOFT SECURITY.MD V0.0.7 BLOCK -->
 
-## Security
+## セキュリティ
 
-Microsoft takes the security of our software products and services seriously, which includes all source code repositories managed through our GitHub organizations, which include [Microsoft](https://github.com/Microsoft), [Azure](https://github.com/Azure), [DotNet](https://github.com/dotnet), [AspNet](https://github.com/aspnet), [Xamarin](https://github.com/xamarin), and [our GitHub organizations](https://opensource.microsoft.com/).
+Microsoft は、ソフトウェア製品およびサービスのセキュリティを非常に重視しています。これには、GitHub 組織（[Microsoft](https://github.com/Microsoft)、[Azure](https://github.com/Azure)、[DotNet](https://github.com/dotnet)、[AspNet](https://github.com/aspnet)、[Xamarin](https://github.com/xamarin)、および [GitHub 組織](https://opensource.microsoft.com/) など）を通じて管理されるすべてのソースコード リポジトリが含まれます。
 
-If you believe you have found a security vulnerability in any Microsoft-owned repository that meets [Microsoft's definition of a security vulnerability](https://aka.ms/opensource/security/definition), please report it to us as described below.
+Microsoft が所有するリポジトリにおいて、[Microsoft のセキュリティ脆弱性の定義](https://aka.ms/opensource/security/definition) に該当するセキュリティ脆弱性を発見したと思われる場合は、以下の手順に従って Microsoft までご報告ください。
 
-## Reporting Security Issues
+## セキュリティ問題の報告
 
-**Please do not report security vulnerabilities through public GitHub issues.**
+**セキュリティ上の脆弱性は、GitHub の公開 Issue を通じて報告しないでください。**
 
-Instead, please report them to the Microsoft Security Response Center (MSRC) at [https://msrc.microsoft.com/create-report](https://aka.ms/opensource/security/create-report).
+代わりに、Microsoft セキュリティ レスポンス センター (MSRC) [https://msrc.microsoft.com/create-report](https://aka.ms/opensource/security/create-report) にご報告ください。
 
-If you prefer to submit without logging in, send email to [secure@microsoft.com](mailto:secure@microsoft.com). If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center PGP Key page](https://aka.ms/opensource/security/pgpkey).
+ログインせずに報告する場合は、[secure@microsoft.com](mailto:secure@microsoft.com) までメールでお問い合わせください。可能であれば、PGP キーを使用してメッセージを暗号化してください。PGP キーは [Microsoft セキュリティ レスポンス センター PGP キー ページ](https://aka.ms/opensource/security/pgpkey) からダウンロードしてください。
 
-You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message. Additional information can be found at [microsoft.com/msrc](https://aka.ms/opensource/security/msrc).
+24 時間以内に返信いたします。何らかの理由で返信がない場合は、元のメッセージが確実に受信されたことを確認するために、メールでご連絡ください。詳細については、[microsoft.com/msrc](https://aka.ms/opensource/security/msrc) をご覧ください。
 
-Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:
+問題の性質と範囲をより深く理解するため、以下の必要な情報を（可能な限り）ご記入ください。
 
--   Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
--   Full paths of source file(s) related to the manifestation of the issue
--   The location of the affected source code (tag/branch/commit or direct URL)
--   Any special configuration required to reproduce the issue
--   Step-by-step instructions to reproduce the issue
--   Proof-of-concept or exploit code (if possible)
--   Impact of the issue, including how an attacker might exploit the issue
+- 問題の種類（例：バッファオーバーフロー、SQLインジェクション、クロスサイトスクリプティングなど）
+- 問題の兆候に関連するソースファイルのフルパス
+- 影響を受けるソースコードの場所（タグ/ブランチ/コミット、または直接URL）
+- 問題を再現するために必要な特別な設定
+- 問題を再現するための手順
+- 概念実証コードまたはエクスプロイトコード（可能な場合）
+- 問題の影響（攻撃者が問題を悪用する方法を含む）
 
-This information will help us triage your report more quickly.
+これらの情報は、お客様の報告をより迅速にトリアージするために役立ちます。
 
-If you are reporting for a bug bounty, more complete reports can contribute to a higher bounty award. Please visit our [Microsoft Bug Bounty Program](https://aka.ms/opensource/security/bounty) page for more details about our active programs.
+バグ報奨金制度にご登録の場合、より詳細な報告をいただくほど、報奨金の増額につながります。現在実施中のプログラムの詳細については、[Microsoft バグ報奨金プログラム](https://aka.ms/opensource/security/bounty) ページをご覧ください。
 
-## Preferred Languages
+## 推奨言語
 
-We prefer all communications to be in English.
+すべてのコミュニケーションは英語で行っていただくことを推奨します。
 
-## Policy
+## ポリシー
 
-Microsoft follows the principle of [Coordinated Vulnerability Disclosure](https://aka.ms/opensource/security/cvd).
+Microsoft は、[協調的な脆弱性開示](https://aka.ms/opensource/security/cvd) の原則に従います。
 
 <!-- END MICROSOFT SECURITY.MD BLOCK -->
